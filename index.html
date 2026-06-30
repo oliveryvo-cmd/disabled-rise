@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DisabledRise — Every Kid Can Rise</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#fff;font-family:'Segoe UI',Arial,sans-serif;color:#111;overflow-x:hidden;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:#fff;border-bottom:2px solid #f5f0e0;position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,0.04);}
+.logo{font-size:1.8rem;font-weight:900;cursor:pointer;background:linear-gradient(135deg,#b8860b,#ffd700,#b8860b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{color:#888;text-decoration:none;font-size:0.82rem;font-weight:700;transition:color 0.2s;}
+.nav-links a:hover{color:#b8860b;}
+.nav-btn{padding:10px 24px;background:linear-gradient(135deg,#b8860b,#ffd700);border:none;border-radius:50px;font-size:0.82rem;font-weight:900;color:#fff;cursor:pointer;text-decoration:none;}
+
+/* HERO */
+.hero{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px;background:linear-gradient(180deg,#fffdf5 0%,#fff 100%);position:relative;overflow:hidden;}
+.hero-glow{position:absolute;width:800px;height:800px;background:radial-gradient(circle,rgba(255,215,0,0.12),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.hero-badge{display:inline-block;padding:8px 24px;background:linear-gradient(135deg,#b8860b,#ffd700);border-radius:50px;font-size:0.65rem;font-weight:900;letter-spacing:3px;color:#fff;margin-bottom:32px;box-shadow:0 4px 20px rgba(184,134,11,0.3);}
+.hero h1{font-size:5rem;font-weight:900;line-height:1.05;margin-bottom:24px;max-width:800px;}
+.hero h1 .gold{background:linear-gradient(135deg,#b8860b,#ffd700,#b8860b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p{font-size:1.1rem;color:#888;max-width:580px;line-height:1.9;margin:0 auto 48px;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:80px;}
+.btn-main{padding:16px 40px;background:linear-gradient(135deg,#b8860b,#ffd700);border:none;border-radius:50px;font-size:0.95rem;font-weight:900;color:#fff;cursor:pointer;text-decoration:none;box-shadow:0 8px 30px rgba(184,134,11,0.3);}
+.btn-ghost{padding:16px 40px;background:transparent;border:2px solid #e8e0c0;border-radius:50px;font-size:0.95rem;font-weight:700;color:#888;cursor:pointer;text-decoration:none;}
+.hero-stats{display:flex;gap:60px;justify-content:center;flex-wrap:wrap;}
+.h-stat-n{font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,#b8860b,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.h-stat-l{font-size:0.6rem;letter-spacing:2px;color:#bbb;margin-top:4px;}
+
+/* SECTION */
+.section{padding:80px 48px;max-width:1100px;margin:0 auto;}
+.section-tag{font-size:0.6rem;letter-spacing:4px;font-weight:900;color:#b8860b;margin-bottom:12px;}
+.section-h{font-size:2.6rem;font-weight:900;margin-bottom:16px;line-height:1.2;}
+.section-sub{font-size:0.95rem;color:#aaa;max-width:520px;line-height:1.8;margin-bottom:52px;}
+
+/* STORIES */
+.stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.story-card{border-radius:24px;padding:32px;border:2px solid #f5f0e0;transition:all 0.3s;background:#fffdf5;}
+.story-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(184,134,11,0.08);border-color:#ffd700;}
+.story-avatar{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:16px;background:linear-gradient(135deg,#b8860b22,#ffd70022);border:2px solid #ffd70033;}
+.story-name{font-size:1rem;font-weight:900;margin-bottom:4px;}
+.story-condition{font-size:0.7rem;letter-spacing:2px;color:#b8860b;font-weight:700;margin-bottom:12px;}
+.story-text{font-size:0.82rem;color:#888;line-height:1.8;font-style:italic;}
+
+/* RESOURCES */
+.resources-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+.resource-card{border-radius:20px;padding:28px;border:2px solid #f5f0e0;text-align:center;transition:all 0.2s;background:#fff;}
+.resource-card:hover{border-color:#ffd700;box-shadow:0 10px 40px rgba(184,134,11,0.08);}
+.resource-icon{font-size:2.4rem;margin-bottom:14px;}
+.resource-title{font-size:0.9rem;font-weight:900;margin-bottom:8px;}
+.resource-desc{font-size:0.75rem;color:#aaa;line-height:1.6;}
+.resource-link{display:inline-block;margin-top:14px;font-size:0.72rem;font-weight:900;color:#b8860b;text-decoration:none;}
+
+/* ADVOCACY */
+.advocacy{background:linear-gradient(135deg,#fffdf5,#fff8e1);padding:80px 48px;border-top:2px solid #f5f0e0;border-bottom:2px solid #f5f0e0;}
+.advocacy-inner{max-width:1000px;margin:0 auto;}
+.advocacy-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.advocacy-text .section-h{font-size:2.2rem;}
+.advocacy-list{list-style:none;margin-top:24px;}
+.advocacy-list li{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;font-size:0.88rem;color:#666;line-height:1.7;}
+.advocacy-list li span{font-size:1.2rem;margin-top:2px;}
+.advocacy-img{background:linear-gradient(135deg,#b8860b,#ffd700);border-radius:24px;height:320px;display:flex;align-items:center;justify-content:center;font-size:6rem;}
+
+/* COMMUNITY */
+.community-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.comm-card{border-radius:20px;padding:28px;border:2px solid #f5f0e0;transition:all 0.2s;}
+.comm-card:hover{border-color:#ffd700;}
+.comm-icon{font-size:2rem;margin-bottom:14px;}
+.comm-title{font-size:0.95rem;font-weight:900;margin-bottom:8px;}
+.comm-desc{font-size:0.78rem;color:#aaa;line-height:1.7;margin-bottom:16px;}
+.comm-btn{display:inline-block;padding:8px 20px;background:linear-gradient(135deg,#b8860b,#ffd700);border-radius:50px;font-size:0.72rem;font-weight:900;color:#fff;text-decoration:none;}
+
+/* BLOG */
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.blog-card{border-radius:20px;overflow:hidden;border:2px solid #f5f0e0;transition:all 0.2s;}
+.blog-card:hover{border-color:#ffd700;transform:translateY(-4px);}
+.blog-thumb{height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,#fffdf5,#fff8e1);}
+.blog-body{padding:20px;}
+.blog-tag{font-size:0.58rem;letter-spacing:2px;color:#b8860b;font-weight:900;margin-bottom:8px;}
+.blog-title{font-size:0.9rem;font-weight:900;margin-bottom:8px;line-height:1.4;}
+.blog-preview{font-size:0.75rem;color:#aaa;line-height:1.6;}
+
+/* JOIN */
+.join{padding:120px 48px;text-align:center;background:linear-gradient(135deg,#b8860b,#ffd700,#b8860b);color:#fff;}
+.join h2{font-size:3rem;font-weight:900;margin-bottom:16px;}
+.join p{font-size:1rem;opacity:0.85;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.8;}
+.join-btn{padding:18px 48px;background:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:900;color:#b8860b;cursor:pointer;text-decoration:none;box-shadow:0 8px 30px rgba(0,0,0,0.2);}
+
+footer{background:#111;color:#fff;padding:48px;text-align:center;}
+footer p{font-size:0.7rem;color:#444;letter-spacing:2px;line-height:2;}
+.footer-logo{font-size:1.6rem;font-weight:900;margin-bottom:16px;background:linear-gradient(135deg,#b8860b,#ffd700);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo" onclick="window.scrollTo(0,0)">✨ DisabledRise</div>
+  <div class="nav-links">
+    <a href="#stories">Stories</a>
+    <a href="#resources">Resources</a>
+    <a href="#advocacy">Advocacy</a>
+    <a href="#community">Community</a>
+    <a href="#blog">Blog</a>
+    <a href="https://oliveryvo-cmd.github.io/kidshelp" target="_blank">KidsHelp</a>
+    <a href="signup.html" class="nav-btn">Join Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">✨ EVERY KID CAN RISE</div>
+  <h1>Disability Doesn't<br>Define You.<br><span class="gold">Your Rise Does.</span></h1>
+  <p>A movement for disabled kids everywhere. Share your story, find resources, connect with others, and fight for a world that sees your ability first.</p>
+  <div class="hero-btns">
+    <a href="signup.html" class="btn-main">✨ Join DisabledRise</a>
+    <a href="#stories" class="btn-ghost">Read Stories ↓</a>
+  </div>
+  <div class="hero-stats">
+    <div><div class="h-stat-n">1 in 5</div><div class="h-stat-l">KIDS HAVE A DISABILITY</div></div>
+    <div><div class="h-stat-n">240M</div><div class="h-stat-l">DISABLED KIDS WORLDWIDE</div></div>
+    <div><div class="h-stat-n">100%</div><div class="h-stat-l">DESERVE TO RISE</div></div>
+  </div>
+</div>
+
+<!-- STORIES -->
+<div class="section" id="stories">
+  <div class="section-tag">REAL STORIES</div>
+  <div class="section-h">Kids Who Rose.</div>
+  <div class="section-sub">Real stories from real kids proving that disability is never the end of the story.</div>
+  <div class="stories-grid">
+    <div class="story-card">
+      <div class="story-avatar">🌟</div>
+      <div class="story-name">Oliver V.</div>
+      <div class="story-condition">TOURETTE SYNDROME</div>
+      <div class="story-text">"I have Tourette syndrome and I still built 8 real products, a social network, a game studio, and a company — all before middle school. Disability doesn't stop you. It makes you stronger."</div>
+    </div>
+    <div class="story-card">
+      <div class="story-avatar">💫</div>
+      <div class="story-name">Share Your Story</div>
+      <div class="story-condition">YOUR CONDITION</div>
+      <div class="story-text">"Your story matters. Join DisabledRise and share what you've overcome. You could inspire thousands of kids just like you."</div>
+    </div>
+    <div class="story-card">
+      <div class="story-avatar">🔥</div>
+      <div class="story-name">Be Featured Here</div>
+      <div class="story-condition">ANY DISABILITY</div>
+      <div class="story-text">"Every kid with a disability has a story worth telling. Submit yours and we'll feature it right here for the world to see."</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESOURCES -->
+<div style="background:#fffdf5;border-top:2px solid #f5f0e0;border-bottom:2px solid #f5f0e0;padding:80px 48px;" id="resources">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-tag">RESOURCES</div>
+    <div class="section-h">Help & Support</div>
+    <div class="section-sub">Everything a disabled kid or their family needs — all in one place.</div>
+    <div class="resources-grid">
+      <div class="resource-card">
+        <div class="resource-icon">🧠</div>
+        <div class="resource-title">Mental Health</div>
+        <div class="resource-desc">Resources for anxiety, depression, and emotional support for disabled kids.</div>
+        <a href="#" class="resource-link">Explore →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">📚</div>
+        <div class="resource-title">School Support</div>
+        <div class="resource-desc">IEPs, 504 plans, and how to get the accommodations you deserve at school.</div>
+        <a href="#" class="resource-link">Explore →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">⚖️</div>
+        <div class="resource-title">Your Rights</div>
+        <div class="resource-desc">Know your legal rights as a disabled kid. The ADA, IDEA, and more explained simply.</div>
+        <a href="#" class="resource-link">Explore →</a>
+      </div>
+      <div class="resource-card">
+        <div class="resource-icon">🤝</div>
+        <div class="resource-title">Find Support Groups</div>
+        <div class="resource-desc">Connect with other kids and families dealing with the same challenges.</div>
+        <a href="#" class="resource-link">Explore →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADVOCACY -->
+<div class="advocacy" id="advocacy">
+  <div class="advocacy-inner">
+    <div class="advocacy-grid">
+      <div class="advocacy-text">
+        <div class="section-tag">ADVOCACY</div>
+        <div class="section-h">Fight For What's Right.</div>
+        <p style="color:#888;font-size:0.95rem;line-height:1.8;margin-top:12px;">Disabled kids deserve equal treatment, equal opportunities, and equal respect. DisabledRise fights for all of it.</p>
+        <ul class="advocacy-list">
+          <li><span>✨</span>Equal access to education for every disabled kid</li>
+          <li><span>✨</span>Anti-bullying laws that protect disabled students</li>
+          <li><span>✨</span>More representation of disabled kids in media</li>
+          <li><span>✨</span>Affordable therapies and medical support for all families</li>
+          <li><span>✨</span>Workplaces that welcome disabled people as adults</li>
+        </ul>
+        <a href="signup.html" style="display:inline-block;margin-top:28px;" class="btn-main">Join the Fight →</a>
+      </div>
+      <div class="advocacy-img">✊</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMUNITY -->
+<div class="section" id="community">
+  <div class="section-tag">COMMUNITY</div>
+  <div class="section-h">You're Not Alone.</div>
+  <div class="section-sub">Connect with disabled kids from around the world who understand exactly what you're going through.</div>
+  <div class="community-grid">
+    <div class="comm-card">
+      <div class="comm-icon">💬</div>
+      <div class="comm-title">Discussion Forums</div>
+      <div class="comm-desc">Safe spaces to talk about your experiences, ask questions, and support each other.</div>
+      <a href="signup.html" class="comm-btn">Join Discussions</a>
+    </div>
+    <div class="comm-card">
+      <div class="comm-icon">🎥</div>
+      <div class="comm-title">DisabledTalks</div>
+      <div class="comm-desc">Watch videos from disabled kids sharing their stories on our YouTube channel.</div>
+      <a href="https://youtube.com/@DisabledTalks" target="_blank" class="comm-btn">Watch Now</a>
+    </div>
+    <div class="comm-card">
+      <div class="comm-icon">📝</div>
+      <div class="comm-title">Share Your Story</div>
+      <div class="comm-desc">Submit your story to be featured on DisabledRise and inspire thousands of kids.</div>
+      <a href="signup.html" class="comm-btn">Share Story</a>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG -->
+<div style="background:#fffdf5;border-top:2px solid #f5f0e0;padding:80px 48px;" id="blog">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-tag">BLOG</div>
+    <div class="section-h">Latest Articles</div>
+    <div class="section-sub">Disability awareness, tips, stories, and news — written for kids by kids.</div>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <div class="blog-thumb">🧠</div>
+        <div class="blog-body">
+          <div class="blog-tag">TOURETTE SYNDROME</div>
+          <div class="blog-title">What It's Really Like Having Tourette's — By a 10 Year Old CEO</div>
+          <div class="blog-preview">Oliver Vo shares what it's like building a company while managing Tourette syndrome every day...</div>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb">⚖️</div>
+        <div class="blog-body">
+          <div class="blog-tag">RIGHTS</div>
+          <div class="blog-title">5 Rights Every Disabled Kid Has at School That Teachers Must Follow</div>
+          <div class="blog-preview">Did you know you have legal rights at school? Here's what the law says about disabled students...</div>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb">💪</div>
+        <div class="blog-body">
+          <div class="blog-tag">INSPIRATION</div>
+          <div class="blog-title">10 Famous People Who Have Disabilities That Changed the World</div>
+          <div class="blog-preview">From Einstein to Elon Musk — some of the greatest minds in history had disabilities...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN -->
+<div class="join">
+  <div class="section-tag" style="color:rgba(255,255,255,0.7);text-align:center;">JOIN THE MOVEMENT</div>
+  <h2>Ready to Rise?</h2>
+  <p>Join thousands of disabled kids fighting for a world that sees their ability first. It's free, it's safe, and it's for you.</p>
+  <a href="signup.html" class="join-btn">✨ Join DisabledRise Free</a>
+</div>
+
+<footer>
+  <div class="footer-logo">✨ DisabledRise</div>
+  <p>Founded by Oliver Vo · Age 10 · Tourette Syndrome · Ladera Ranch, CA · 2026<br>
+  A KidsHelp & NexaKid Initiative · Every kid can rise.<br><br>
+  © 2026 DisabledRise · truongnvo@gmail.com</p>
+</footer>
+
+</body>
+</html>
