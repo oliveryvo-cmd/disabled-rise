@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile — S.U Kids</title>
+<title>Profile — LOCA</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#fffdf5;font-family:'Segoe UI',Arial,sans-serif;color:#111;}
@@ -77,7 +77,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
 </head>
 <body>
 <nav>
-  <div class="logo" onclick="window.location.href='index.html'">⚡ S.U Kids</div>
+  <div class="logo" onclick="window.location.href='index.html'">⚡ LOCA</div>
   <div class="nav-links">
     <a href="index.html">Home</a>
     <a href="signup.html" class="nav-btn" id="navJoin">Join Free</a>
@@ -112,7 +112,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
 
     <div class="section-label">⚡ MY SUPERPOWER</div>
     <div class="superpower-card">
-      <div class="superpower-label">WHAT MAKES ME SUPERUNIQUE</div>
+      <div class="superpower-label">WHAT MAKES ME COOL ABILITY</div>
       <div class="superpower-text" id="superpowerText">Tap to add your superpower...</div>
       <span class="superpower-edit" onclick="openSuperpowerModal()">✏️ Edit</span>
     </div>
@@ -155,7 +155,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
   <div class="modal">
     <h3>⚡ My Superpower</h3>
     <div class="field">
-      <label>WHAT MAKES YOU SUPERUNIQUE?</label>
+      <label>WHAT MAKES YOU COOL ABILITY?</label>
       <input type="text" id="superpowerInput" placeholder="e.g. I have Tourette's and I build companies!"/>
     </div>
     <div class="modal-actions">
@@ -171,7 +171,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
     <h3>📖 My Story</h3>
     <div class="field">
       <label>SHARE YOUR STORY WITH THE WORLD</label>
-      <textarea id="storyInput" placeholder="Tell the world what makes you SuperUnique. Your story could inspire thousands of kids..."></textarea>
+      <textarea id="storyInput" placeholder="Tell the world what makes you Cool Ability. Your story could inspire thousands of kids..."></textarea>
     </div>
     <div class="modal-actions">
       <button class="cancel-btn" onclick="document.getElementById('storyModal').style.display='none'">Cancel</button>
@@ -192,7 +192,7 @@ const db = getFirestore(app);
 const EMOJIS = ['⚡','🌟','🔥','💎','🦁','🐉','🦋','🌈','🚀','🏆','💜','🌊','🎯','🎵','🦄','🤖','👾','💥','🌙','☀️','🎮','🎨','🧠','💪','✨','🦅','🐺','🦊','🐸','🌺','🔮','🎭'];
 const COLORS = ['#b8860b','#ffd700','#ff6b6b','#4d96ff','#6bcb77','#a855f7','#f97316','#00d9f5','#e63946','#2a9d8f'];
 const BADGES = [
-  {emoji:'⚡',name:'SuperUnique',desc:'Joined S.U Kids',unlocked:true},
+  {emoji:'⚡',name:'Cool Ability',desc:'Joined LOCA',unlocked:true},
   {emoji:'📖',name:'Storyteller',desc:'Shared your story',unlocked:false},
   {emoji:'💪',name:'Superpower',desc:'Added your superpower',unlocked:false},
   {emoji:'🌟',name:'Rising Star',desc:'Got 10 followers',unlocked:false},
@@ -245,7 +245,7 @@ onAuthStateChanged(auth, async user => {
     document.getElementById('navJoin').href = 'profile.html';
 
     // Load profile
-    const snap = await getDoc(doc(db, 'sukids_profiles', user.uid));
+    const snap = await getDoc(doc(db, 'loca_profiles', user.uid));
     if(snap.exists()) {
       const d = snap.data();
       selectedEmoji = d.emoji || '⚡';
@@ -270,7 +270,7 @@ window.closeAvatarModal = function() { document.getElementById('avatarModal').st
 
 window.saveAvatar = async function() {
   if(!currentUser) return;
-  await setDoc(doc(db,'sukids_profiles',currentUser.uid),{emoji:selectedEmoji,color:selectedColor},{merge:true});
+  await setDoc(doc(db,'loca_profiles',currentUser.uid),{emoji:selectedEmoji,color:selectedColor},{merge:true});
   document.getElementById('avatar').style.background = selectedColor;
   document.getElementById('avatarEmoji').textContent = selectedEmoji;
   closeAvatarModal();
@@ -284,7 +284,7 @@ window.openSuperpowerModal = function() {
 window.saveSuperpower = async function() {
   const val = document.getElementById('superpowerInput').value.trim();
   if(!val || !currentUser) return;
-  await setDoc(doc(db,'sukids_profiles',currentUser.uid),{superpower:val},{merge:true});
+  await setDoc(doc(db,'loca_profiles',currentUser.uid),{superpower:val},{merge:true});
   document.getElementById('superpowerText').textContent = val;
   document.getElementById('superpowerModal').style.display = 'none';
 };
@@ -297,7 +297,7 @@ window.openStoryModal = function() {
 window.saveStory = async function() {
   const val = document.getElementById('storyInput').value.trim();
   if(!val || !currentUser) return;
-  await setDoc(doc(db,'sukids_profiles',currentUser.uid),{story:val},{merge:true});
+  await setDoc(doc(db,'loca_profiles',currentUser.uid),{story:val},{merge:true});
   document.getElementById('storyText').textContent = '"' + val + '"';
   document.getElementById('storyModal').style.display = 'none';
 };
