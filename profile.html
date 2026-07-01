@@ -53,6 +53,22 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
 .empty-icon{font-size:2.5rem;margin-bottom:10px;}
 .empty-text{font-size:0.82rem;color:#ccc;}
 
+/* ADMIN */
+.admin-banner{background:linear-gradient(135deg,#b8860b,#ffd700);border-radius:16px;padding:16px 24px;margin-bottom:24px;display:flex;align-items:center;gap:12px;}
+.admin-banner-text{font-size:0.85rem;font-weight:900;color:#000;}
+.admin-panel{background:#fff;border:2px solid #ffd700;border-radius:20px;padding:24px;margin-bottom:24px;}
+.admin-panel h3{font-size:0.75rem;letter-spacing:3px;font-weight:900;color:#b8860b;margin-bottom:16px;}
+.admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.admin-btn{padding:12px 16px;border-radius:12px;font-size:0.78rem;font-weight:900;cursor:pointer;border:none;text-align:center;}
+.admin-btn.gold{background:linear-gradient(135deg,#b8860b,#ffd700);color:#000;}
+.admin-btn.red{background:rgba(230,57,70,0.1);color:#e63946;border:2px solid rgba(230,57,70,0.2);}
+.admin-btn.blue{background:rgba(77,150,255,0.1);color:#4d96ff;border:2px solid rgba(77,150,255,0.2);}
+.admin-btn.green{background:rgba(107,203,119,0.1);color:#2a9d8f;border:2px solid rgba(107,203,119,0.2);}
+.members-list{margin-top:16px;}
+.member-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f5f0e0;font-size:0.82rem;}
+.member-name{font-weight:700;}
+.member-delete{font-size:0.72rem;color:#e63946;cursor:pointer;font-weight:700;background:none;border:none;}
+
 /* EDIT MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
 .modal{background:#fff;border-radius:24px;padding:32px;max-width:480px;width:100%;border:2px solid #f5f0e0;}
@@ -108,6 +124,24 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
     <div class="profile-actions">
       <button class="edit-btn" onclick="openAvatarModal()">🎨 Edit Avatar</button>
       <button class="logout-btn" onclick="logout()">Sign Out</button>
+    </div>
+
+    <!-- ADMIN PANEL (only visible to Oliver) -->
+    <div id="adminSection" style="display:none;">
+      <div class="admin-banner">
+        <span style="font-size:1.5rem;">👑</span>
+        <div class="admin-banner-text">LOCA ADMIN — League of Cool Abilities HQ</div>
+      </div>
+      <div class="admin-panel">
+        <h3>ADMIN CONTROLS</h3>
+        <div class="admin-grid">
+          <button class="admin-btn gold" onclick="sendAnnouncement()">📢 Send Announcement</button>
+          <button class="admin-btn blue" onclick="loadMembers()">👥 View All Members</button>
+          <button class="admin-btn green" onclick="approveStories()">✅ Approve Stories</button>
+          <button class="admin-btn red" onclick="loadMembers()">🗑️ Manage Members</button>
+        </div>
+        <div class="members-list" id="membersList"></div>
+      </div>
     </div>
 
     <div class="section-label">⚡ MY SUPERPOWER</div>
@@ -183,12 +217,13 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const app = initializeApp({apiKey:"AIzaSyBF8NZvpjz8blZi4LL-Q7n-Q3Je73mZ5mo",authDomain:"kid-stock-7a377.firebaseapp.com",projectId:"kid-stock-7a377",storageBucket:"kid-stock-7a377.firebasestorage.app",messagingSenderId:"153069846242",appId:"1:153069846242:web:bdae0c7bb120e9245228bb"});
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+const ADMIN_UID = 'JwGNLZcHzZN1TOQE8JnhgwSnUHy2';
 const EMOJIS = ['⚡','🌟','🔥','💎','🦁','🐉','🦋','🌈','🚀','🏆','💜','🌊','🎯','🎵','🦄','🤖','👾','💥','🌙','☀️','🎮','🎨','🧠','💪','✨','🦅','🐺','🦊','🐸','🌺','🔮','🎭'];
 const COLORS = ['#b8860b','#ffd700','#ff6b6b','#4d96ff','#6bcb77','#a855f7','#f97316','#00d9f5','#e63946','#2a9d8f'];
 const BADGES = [
@@ -255,6 +290,10 @@ onAuthStateChanged(auth, async user => {
     }
     document.getElementById('avatar').style.background = selectedColor;
     document.getElementById('avatarEmoji').textContent = selectedEmoji;
+    if(user.uid === ADMIN_UID) {
+      document.getElementById('adminSection').style.display = 'block';
+      document.getElementById('displayName').innerHTML = username + ' <span style="font-size:0.7rem;background:linear-gradient(135deg,#b8860b,#ffd700);color:#000;padding:3px 10px;border-radius:50px;font-weight:900;">👑 ADMIN</span>';
+    }
     document.getElementById('profileContent').style.display = 'block';
   } else {
     document.getElementById('notLoggedIn').style.display = 'block';
@@ -303,6 +342,61 @@ window.saveStory = async function() {
 };
 
 window.logout = async function() { await signOut(auth); window.location.href='index.html'; };
+
+window.loadMembers = async function() {
+  const snap = await getDocs(collection(db, 'loca_users'));
+  const list = document.getElementById('membersList');
+  if(snap.empty){ list.innerHTML='<div style="color:#bbb;font-size:0.8rem;margin-top:12px;">No members yet.</div>'; return; }
+  list.innerHTML = '<div style="font-size:0.7rem;letter-spacing:2px;color:#b8860b;font-weight:900;margin:16px 0 8px;">ALL MEMBERS</div>' +
+    snap.docs.map(d => {
+      const m = d.data();
+      return `<div class="member-row">
+        <span class="member-name">${m.username||'Unknown'}</span>
+        <span style="color:#bbb;font-size:0.72rem;">Age ${m.age||'?'}</span>
+        <button class="member-delete" onclick="deleteMember('${d.id}')">🗑️ Remove</button>
+      </div>`;
+    }).join('');
+};
+
+window.deleteMember = async function(uid) {
+  if(!confirm('Remove this member?')) return;
+  await deleteDoc(doc(db, 'loca_users', uid));
+  loadMembers();
+};
+
+window.sendAnnouncement = async function() {
+  const msg = prompt('Type your announcement to all LOCA members:');
+  if(!msg) return;
+  await addDoc(collection(db, 'loca_announcements'), { message: msg, from: 'AdminOliver', createdAt: serverTimestamp() });
+  alert('Announcement sent!');
+};
+
+window.approveStories = async function() {
+  const snap = await getDocs(collection(db, 'loca_story_submissions'));
+  const list = document.getElementById('membersList');
+  if(snap.empty){ list.innerHTML='<div style="color:#bbb;font-size:0.8rem;margin-top:12px;">No pending stories.</div>'; return; }
+  list.innerHTML = '<div style="font-size:0.7rem;letter-spacing:2px;color:#b8860b;font-weight:900;margin:16px 0 8px;">PENDING STORIES</div>' +
+    snap.docs.map(d => {
+      const s = d.data();
+      return `<div class="member-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+        <span class="member-name">${s.username||'Unknown'}</span>
+        <span style="color:#888;font-size:0.78rem;">"${s.story||''}"</span>
+        <div style="display:flex;gap:8px;">
+          <button onclick="approveStory('${d.id}')" style="padding:6px 14px;background:#6bcb77;border:none;border-radius:50px;font-size:0.7rem;font-weight:900;cursor:pointer;color:#fff;">✅ Approve</button>
+          <button onclick="rejectStory('${d.id}')" style="padding:6px 14px;background:#e63946;border:none;border-radius:50px;font-size:0.7rem;font-weight:900;cursor:pointer;color:#fff;">❌ Reject</button>
+        </div>
+      </div>`;
+    }).join('');
+};
+
+window.approveStory = async function(id) {
+  await setDoc(doc(db,'loca_story_submissions',id),{approved:true},{merge:true});
+  approveStories();
+};
+window.rejectStory = async function(id) {
+  await deleteDoc(doc(db,'loca_story_submissions',id));
+  approveStories();
+};
 </script>
 </body>
 </html>
