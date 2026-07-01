@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LOCA — League of Cool Abilities</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#b8860b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LOCA">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="description" content="A movement for disabled kids everywhere. Share your story, find resources, and rise.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:#fff;font-family:'Segoe UI',Arial,sans-serif;color:#111;overflow-x:hidden;}
@@ -479,6 +486,14 @@ footer p{font-size:0.7rem;color:#444;letter-spacing:2px;line-height:2;}
     <div class="blog-modal-body" id="bBody"></div>
   </div>
 </div>
+
+<script>
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/disabled-rise/sw.js');
+  });
+}
+</script>
 
 <script>
 const BLOGS = [

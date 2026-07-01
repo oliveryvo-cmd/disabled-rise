@@ -1,0 +1,26 @@
+{
+  "name": "LOCA — League of Cool Abilities",
+  "short_name": "LOCA",
+  "description": "A movement for disabled kids everywhere. Share your story, find resources, and rise.",
+  "start_url": "/disabled-rise/",
+  "display": "standalone",
+  "background_color": "#fffdf5",
+  "theme_color": "#b8860b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "categories": ["education", "social", "lifestyle"]
+}
