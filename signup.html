@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Join SU Kids</title>
+<title>Join S.U Kids</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:linear-gradient(135deg,#fffdf5,#fff8e1);font-family:'Segoe UI',Arial,sans-serif;color:#111;min-height:100vh;display:flex;align-items:center;justify-content:center;}
@@ -27,7 +27,7 @@ body{background:linear-gradient(135deg,#fffdf5,#fff8e1);font-family:'Segoe UI',A
 </head>
 <body>
 <div class="card">
-  <div class="logo" onclick="window.location.href='index.html'">✨ SU Kids</div>
+  <div class="logo" onclick="window.location.href='index.html'">✨ S.U Kids</div>
   <div class="subtitle">JOIN THE MOVEMENT</div>
   <div id="form">
     <div class="error" id="error"></div>
@@ -44,16 +44,16 @@ body{background:linear-gradient(135deg,#fffdf5,#fff8e1);font-family:'Segoe UI',A
         <option value="educator">A teacher / educator</option>
       </select>
     </div>
-    <button class="btn" id="btn" onclick="signup()">✨ Join SU Kids</button>
+    <button class="btn" id="btn" onclick="signup()">✨ Join S.U Kids</button>
     <div class="link">Already have an account? <a href="login.html">Log in</a></div>
     <div class="safe">FREE · SAFE · NO EMAIL NEEDED</div>
   </div>
   <div class="success" id="success">
     <div style="font-size:3rem;margin-bottom:16px;">✨</div>
-    <h2>Welcome to SU Kids!</h2>
+    <h2>Welcome to S.U Kids!</h2>
     <p>You are now part of the movement.<br>Together we rise.</p>
     <br>
-    <button class="btn" onclick="window.location.href='index.html'">Go to SU Kids</button>
+    <button class="btn" onclick="window.location.href='index.html'">Go to S.U Kids</button>
   </div>
 </div>
 <script type="module">
@@ -82,7 +82,7 @@ window.signup = async function() {
     let msg='Something went wrong!';
     if(e.code==='auth/email-already-in-use')msg='That username is taken! Try another.';
     if(e.code==='auth/weak-password')msg='Password needs at least 6 characters!';
-    err.textContent=msg;err.style.display='block';btn.disabled=false;btn.textContent='Join SU Kids';
+    err.textContent=msg;err.style.display='block';btn.disabled=false;btn.textContent='Join S.U Kids';
   }
 };
 </script>
