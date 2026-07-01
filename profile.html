@@ -59,15 +59,29 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
 .admin-panel{background:#fff;border:2px solid #ffd700;border-radius:20px;padding:24px;margin-bottom:24px;}
 .admin-panel h3{font-size:0.75rem;letter-spacing:3px;font-weight:900;color:#b8860b;margin-bottom:16px;}
 .admin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
-.admin-btn{padding:12px 16px;border-radius:12px;font-size:0.78rem;font-weight:900;cursor:pointer;border:none;text-align:center;}
+.admin-btn{padding:12px 16px;border-radius:12px;font-size:0.78rem;font-weight:900;cursor:pointer;border:none;text-align:center;transition:opacity 0.2s;}
+.admin-btn:hover{opacity:0.85;}
 .admin-btn.gold{background:linear-gradient(135deg,#b8860b,#ffd700);color:#000;}
 .admin-btn.red{background:rgba(230,57,70,0.1);color:#e63946;border:2px solid rgba(230,57,70,0.2);}
 .admin-btn.blue{background:rgba(77,150,255,0.1);color:#4d96ff;border:2px solid rgba(77,150,255,0.2);}
 .admin-btn.green{background:rgba(107,203,119,0.1);color:#2a9d8f;border:2px solid rgba(107,203,119,0.2);}
-.members-list{margin-top:16px;}
+.admin-result{margin-top:16px;display:none;}
+.admin-result-title{font-size:0.62rem;letter-spacing:3px;color:#b8860b;font-weight:900;margin-bottom:12px;}
 .member-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f5f0e0;font-size:0.82rem;}
 .member-name{font-weight:700;}
 .member-delete{font-size:0.72rem;color:#e63946;cursor:pointer;font-weight:700;background:none;border:none;}
+.announce-form{margin-top:16px;}
+.announce-form textarea{width:100%;padding:12px 16px;background:#fffdf5;border:2px solid #f5f0e0;border-radius:12px;color:#111;font-size:0.88rem;outline:none;font-family:inherit;min-height:80px;resize:vertical;}
+.announce-form textarea:focus{border-color:#ffd700;}
+.announce-send{margin-top:10px;padding:10px 24px;background:linear-gradient(135deg,#b8860b,#ffd700);border:none;border-radius:50px;font-size:0.78rem;font-weight:900;color:#000;cursor:pointer;}
+.story-approve-row{padding:14px 0;border-bottom:1px solid #f5f0e0;}
+.story-approve-name{font-size:0.82rem;font-weight:900;margin-bottom:4px;}
+.story-approve-text{font-size:0.78rem;color:#888;line-height:1.6;font-style:italic;margin-bottom:10px;}
+.story-approve-btns{display:flex;gap:8px;}
+.approve-yes{padding:6px 16px;background:#6bcb77;border:none;border-radius:50px;font-size:0.7rem;font-weight:900;cursor:pointer;color:#fff;}
+.approve-no{padding:6px 16px;background:#e63946;border:none;border-radius:50px;font-size:0.7rem;font-weight:900;cursor:pointer;color:#fff;}
+.admin-empty{color:#bbb;font-size:0.8rem;padding:12px 0;}
+.admin-success{background:linear-gradient(135deg,#b8860b22,#ffd70022);border:1px solid #ffd70055;border-radius:10px;padding:10px 14px;font-size:0.78rem;color:#b8860b;font-weight:700;margin-top:10px;display:none;}
 
 /* EDIT MODALS */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;}
@@ -135,12 +149,39 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:16px 4
       <div class="admin-panel">
         <h3>ADMIN CONTROLS</h3>
         <div class="admin-grid">
-          <button class="admin-btn gold" onclick="sendAnnouncement()">📢 Send Announcement</button>
-          <button class="admin-btn blue" onclick="loadMembers()">👥 View All Members</button>
-          <button class="admin-btn green" onclick="approveStories()">✅ Approve Stories</button>
-          <button class="admin-btn red" onclick="loadMembers()">🗑️ Manage Members</button>
+          <button class="admin-btn gold" onclick="showAdminSection('announce')">📢 Send Announcement</button>
+          <button class="admin-btn blue" onclick="showAdminSection('members')">👥 View All Members</button>
+          <button class="admin-btn green" onclick="showAdminSection('stories')">✅ Approve Stories</button>
+          <button class="admin-btn red" onclick="showAdminSection('manage')">🗑️ Manage Members</button>
         </div>
-        <div class="members-list" id="membersList"></div>
+
+        <!-- ANNOUNCEMENT -->
+        <div class="admin-result" id="admin-announce">
+          <div class="admin-result-title">📢 SEND ANNOUNCEMENT</div>
+          <div class="announce-form">
+            <textarea id="announceText" placeholder="Type your announcement to all LOCA members..."></textarea>
+            <button class="announce-send" onclick="sendAnnouncement()">📢 Send to All Members</button>
+            <div class="admin-success" id="announce-success">✅ Announcement sent to all members!</div>
+          </div>
+        </div>
+
+        <!-- VIEW MEMBERS -->
+        <div class="admin-result" id="admin-members">
+          <div class="admin-result-title">👥 ALL MEMBERS</div>
+          <div id="membersList"><div class="admin-empty">Loading members...</div></div>
+        </div>
+
+        <!-- APPROVE STORIES -->
+        <div class="admin-result" id="admin-stories">
+          <div class="admin-result-title">✅ PENDING STORIES</div>
+          <div id="storiesList"><div class="admin-empty">Loading stories...</div></div>
+        </div>
+
+        <!-- MANAGE MEMBERS -->
+        <div class="admin-result" id="admin-manage">
+          <div class="admin-result-title">🗑️ MANAGE MEMBERS</div>
+          <div id="manageList"><div class="admin-empty">Loading members...</div></div>
+        </div>
       </div>
     </div>
 
@@ -343,59 +384,83 @@ window.saveStory = async function() {
 
 window.logout = async function() { await signOut(auth); window.location.href='index.html'; };
 
-window.loadMembers = async function() {
-  const snap = await getDocs(collection(db, 'loca_users'));
-  const list = document.getElementById('membersList');
-  if(snap.empty){ list.innerHTML='<div style="color:#bbb;font-size:0.8rem;margin-top:12px;">No members yet.</div>'; return; }
-  list.innerHTML = '<div style="font-size:0.7rem;letter-spacing:2px;color:#b8860b;font-weight:900;margin:16px 0 8px;">ALL MEMBERS</div>' +
-    snap.docs.map(d => {
-      const m = d.data();
-      return `<div class="member-row">
-        <span class="member-name">${m.username||'Unknown'}</span>
-        <span style="color:#bbb;font-size:0.72rem;">Age ${m.age||'?'}</span>
-        <button class="member-delete" onclick="deleteMember('${d.id}')">🗑️ Remove</button>
-      </div>`;
-    }).join('');
-};
-
-window.deleteMember = async function(uid) {
-  if(!confirm('Remove this member?')) return;
-  await deleteDoc(doc(db, 'loca_users', uid));
-  loadMembers();
+window.showAdminSection = function(which) {
+  ['announce','members','stories','manage'].forEach(s => {
+    document.getElementById('admin-'+s).style.display = 'none';
+  });
+  document.getElementById('admin-'+which).style.display = 'block';
+  if(which === 'members') loadMembers();
+  if(which === 'stories') loadStories();
+  if(which === 'manage') loadManage();
 };
 
 window.sendAnnouncement = async function() {
-  const msg = prompt('Type your announcement to all LOCA members:');
+  const msg = document.getElementById('announceText').value.trim();
   if(!msg) return;
   await addDoc(collection(db, 'loca_announcements'), { message: msg, from: 'AdminOliver', createdAt: serverTimestamp() });
-  alert('Announcement sent!');
+  document.getElementById('announceText').value = '';
+  const s = document.getElementById('announce-success');
+  s.style.display = 'block';
+  setTimeout(() => s.style.display = 'none', 3000);
 };
 
-window.approveStories = async function() {
-  const snap = await getDocs(collection(db, 'loca_story_submissions'));
+window.loadMembers = async function() {
+  const snap = await getDocs(collection(db, 'loca_users'));
   const list = document.getElementById('membersList');
-  if(snap.empty){ list.innerHTML='<div style="color:#bbb;font-size:0.8rem;margin-top:12px;">No pending stories.</div>'; return; }
-  list.innerHTML = '<div style="font-size:0.7rem;letter-spacing:2px;color:#b8860b;font-weight:900;margin:16px 0 8px;">PENDING STORIES</div>' +
-    snap.docs.map(d => {
-      const s = d.data();
-      return `<div class="member-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
-        <span class="member-name">${s.username||'Unknown'}</span>
-        <span style="color:#888;font-size:0.78rem;">"${s.story||''}"</span>
-        <div style="display:flex;gap:8px;">
-          <button onclick="approveStory('${d.id}')" style="padding:6px 14px;background:#6bcb77;border:none;border-radius:50px;font-size:0.7rem;font-weight:900;cursor:pointer;color:#fff;">✅ Approve</button>
-          <button onclick="rejectStory('${d.id}')" style="padding:6px 14px;background:#e63946;border:none;border-radius:50px;font-size:0.7rem;font-weight:900;cursor:pointer;color:#fff;">❌ Reject</button>
-        </div>
-      </div>`;
-    }).join('');
+  if(snap.empty){ list.innerHTML='<div class="admin-empty">No members yet.</div>'; return; }
+  list.innerHTML = snap.docs.map(d => {
+    const m = d.data();
+    return `<div class="member-row">
+      <span class="member-name">${m.username||'Unknown'}</span>
+      <span style="color:#bbb;font-size:0.72rem;">Age ${m.age||'?'} · ${m.role||'member'}</span>
+    </div>`;
+  }).join('');
+};
+
+window.loadManage = async function() {
+  const snap = await getDocs(collection(db, 'loca_users'));
+  const list = document.getElementById('manageList');
+  if(snap.empty){ list.innerHTML='<div class="admin-empty">No members yet.</div>'; return; }
+  list.innerHTML = snap.docs.map(d => {
+    const m = d.data();
+    return `<div class="member-row">
+      <span class="member-name">${m.username||'Unknown'}</span>
+      <span style="color:#bbb;font-size:0.72rem;">Age ${m.age||'?'}</span>
+      <button class="member-delete" onclick="deleteMember('${d.id}')">🗑️ Remove</button>
+    </div>`;
+  }).join('');
+};
+
+window.deleteMember = async function(uid) {
+  if(!confirm('Remove this member from LOCA?')) return;
+  await deleteDoc(doc(db, 'loca_users', uid));
+  loadManage();
+};
+
+window.loadStories = async function() {
+  const snap = await getDocs(collection(db, 'loca_story_submissions'));
+  const list = document.getElementById('storiesList');
+  if(snap.empty){ list.innerHTML='<div class="admin-empty">No pending stories. All caught up! ✅</div>'; return; }
+  list.innerHTML = snap.docs.filter(d => !d.data().approved).map(d => {
+    const s = d.data();
+    return `<div class="story-approve-row">
+      <div class="story-approve-name">${s.username||'Unknown'}</div>
+      <div class="story-approve-text">"${s.story||''}"</div>
+      <div class="story-approve-btns">
+        <button class="approve-yes" onclick="approveStory('${d.id}')">✅ Approve</button>
+        <button class="approve-no" onclick="rejectStory('${d.id}')">❌ Reject</button>
+      </div>
+    </div>`;
+  }).join('') || '<div class="admin-empty">No pending stories. All caught up! ✅</div>';
 };
 
 window.approveStory = async function(id) {
   await setDoc(doc(db,'loca_story_submissions',id),{approved:true},{merge:true});
-  approveStories();
+  loadStories();
 };
 window.rejectStory = async function(id) {
   await deleteDoc(doc(db,'loca_story_submissions',id));
-  approveStories();
+  loadStories();
 };
 </script>
 </body>
